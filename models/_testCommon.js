@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 
-const db = require("../db.js");
+const db = require("../db");
 const { BCRYPT_WORK_FACTOR } = require("../config");
 
 async function commonBeforeAll() {
@@ -8,6 +8,8 @@ async function commonBeforeAll() {
   await db.query("DELETE FROM companies");
   // noinspection SqlWithoutWhere
   await db.query("DELETE FROM users");
+  // noinspection SqlWithoutWhere
+  await db.query("DELETE FROM jobs");
 
   await db.query(`
     INSERT INTO companies(handle, name, num_employees, description, logo_url)
@@ -15,19 +17,28 @@ async function commonBeforeAll() {
            ('c2', 'C2', 2, 'Desc2', 'http://c2.img'),
            ('c3', 'C3', 3, 'Desc3', 'http://c3.img')`);
 
+  await db.query(
+    `
+    INSERT INTO users(username,
+                      password,
+                      first_name,
+                      last_name,
+                      email)
+    VALUES ('u1', $1, 'U1F', 'U1L', 'u1@email.com'),
+           ('u2', $2, 'U2F', 'U2L', 'u2@email.com')`,
+    [
+      await bcrypt.hash("password1", BCRYPT_WORK_FACTOR),
+      await bcrypt.hash("password2", BCRYPT_WORK_FACTOR),
+    ]
+  );
+
   await db.query(`
-        INSERT INTO users(username,
-                          password,
-                          first_name,
-                          last_name,
-                          email)
-        VALUES ('u1', $1, 'U1F', 'U1L', 'u1@email.com'),
-               ('u2', $2, 'U2F', 'U2L', 'u2@email.com')
-        RETURNING username`,
-      [
-        await bcrypt.hash("password1", BCRYPT_WORK_FACTOR),
-        await bcrypt.hash("password2", BCRYPT_WORK_FACTOR),
-      ]);
+    INSERT INTO jobs(title, salary, equity, company_handle)
+    VALUES ('UX Designer', 60000, 0.1, 'c1'),
+           ('Front-End Developer', 110000, 0, 'c2'),
+           ('Back-End Developer', 120000, 0.4, 'c3'),
+           ('Project Manager', null, null, 'c2')
+  `);
 }
 
 async function commonBeforeEach() {
@@ -42,10 +53,16 @@ async function commonAfterAll() {
   await db.end();
 }
 
+const getJobId = async (title = "UX Designer") => {
+  const result = await db.query(`SELECT id FROM jobs WHERE title=$1`, [title]);
+  const job = result.rows[0];
+  return job.id;
+};
 
 module.exports = {
   commonBeforeAll,
   commonBeforeEach,
   commonAfterEach,
   commonAfterAll,
+  getJobId,
 };

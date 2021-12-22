@@ -4,8 +4,8 @@ const db = require("../db");
 const { BadRequestError, NotFoundError } = require("../expressError");
 const { sqlForPartialUpdate } = require("../helpers/sql");
 const { isEmpty, isNil, toNumber } = require("lodash");
-const { quiet } = require("nodemon/lib/utils");
-const { max } = require("pg/lib/defaults");
+// const { quiet } = require("nodemon/lib/utils");
+// const { max } = require("pg/lib/defaults");
 
 /** Related functions for companies. */
 

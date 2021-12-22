@@ -1,8 +1,8 @@
 "use strict";
 
-const db = require("../db.js");
+const db = require("../db");
 const { BadRequestError, NotFoundError } = require("../expressError");
-const Company = require("./company.js");
+const Company = require("./company");
 const {
   commonBeforeAll,
   commonBeforeEach,
