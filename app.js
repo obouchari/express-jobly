@@ -1,22 +1,21 @@
 "use strict";
 
 /** Express app for jobly. */
-
 const express = require("express");
 const cors = require("cors");
+const morgan = require("morgan");
+const helmet = require("helmet");
 
 const { NotFoundError } = require("./expressError");
-
 const { authenticateJWT } = require("./middleware/auth");
 const authRoutes = require("./routes/auth");
 const companiesRoutes = require("./routes/companies");
 const usersRoutes = require("./routes/users");
 const jobsRoutes = require("./routes/jobs");
 
-const morgan = require("morgan");
-
 const app = express();
 
+app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(morgan("tiny"));
