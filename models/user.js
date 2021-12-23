@@ -187,7 +187,7 @@ class User {
   /** Delete given user from database; returns undefined. */
 
   static async remove(username) {
-    let result = await db.query(
+    const result = await db.query(
       `DELETE
            FROM users
            WHERE username = $1

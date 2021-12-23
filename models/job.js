@@ -32,7 +32,7 @@ class Job {
    */
 
   static async findAll(filterObj = {}) {
-    let { title, minSalary, hasEquity } = filterObj;
+    const { title, minSalary, hasEquity } = filterObj;
     const params = [];
     const whereClause = [];
 

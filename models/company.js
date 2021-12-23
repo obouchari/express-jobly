@@ -48,7 +48,7 @@ class Company {
    */
 
   static async findAll(filterObj = {}) {
-    let { name, minEmployees, maxEmployees } = filterObj;
+    const { name, minEmployees, maxEmployees } = filterObj;
     const params = [];
     const whereClause = [];
 

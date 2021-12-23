@@ -27,7 +27,7 @@ describe("create", () => {
   };
 
   test("works", async () => {
-    let company = await Company.create(newCompany);
+    const company = await Company.create(newCompany);
     expect(company).toEqual(newCompany);
 
     const result = await db.query(
@@ -61,7 +61,7 @@ describe("create", () => {
 
 describe("findAll", () => {
   test("works: no filter", async () => {
-    let companies = await Company.findAll();
+    const companies = await Company.findAll();
     expect(companies).toEqual([
       {
         handle: "c1",
@@ -92,7 +92,7 @@ describe("findAll", () => {
 
 describe("findAll", () => {
   test("works: with all filters", async () => {
-    let companies = await Company.findAll({
+    const companies = await Company.findAll({
       name: "2",
       minEmployees: "1",
       maxEmployees: "2",
@@ -109,7 +109,7 @@ describe("findAll", () => {
   });
 
   test("works: with name filter", async () => {
-    let companies = await Company.findAll({
+    const companies = await Company.findAll({
       name: "2",
     });
     expect(companies).toEqual([
@@ -124,7 +124,7 @@ describe("findAll", () => {
   });
 
   test("works: with minEmployees filter", async () => {
-    let companies = await Company.findAll({
+    const companies = await Company.findAll({
       minEmployees: "2",
     });
     expect(companies).toEqual([
@@ -146,7 +146,7 @@ describe("findAll", () => {
   });
 
   test("works: with maxEmployees filter", async () => {
-    let companies = await Company.findAll({
+    const companies = await Company.findAll({
       maxEmployees: "2",
     });
     expect(companies).toEqual([
@@ -197,7 +197,7 @@ describe("findAll", () => {
 
 describe("get", () => {
   test("works", async () => {
-    let company = await Company.get("c2");
+    const company = await Company.get("c2");
     expect(company).toEqual({
       handle: "c2",
       name: "C2",
@@ -224,7 +224,7 @@ describe("get", () => {
   });
 
   test("works with no jobs", async () => {
-    let company = await Company.get("c3");
+    const company = await Company.get("c3");
     expect(company).toEqual({
       handle: "c3",
       name: "C3",
@@ -256,7 +256,7 @@ describe("update", () => {
   };
 
   test("works", async () => {
-    let company = await Company.update("c1", updateData);
+    const company = await Company.update("c1", updateData);
     expect(company).toEqual({
       handle: "c1",
       ...updateData,
@@ -286,7 +286,7 @@ describe("update", () => {
       logoUrl: null,
     };
 
-    let company = await Company.update("c1", updateDataSetNulls);
+    const company = await Company.update("c1", updateDataSetNulls);
     expect(company).toEqual({
       handle: "c1",
       ...updateDataSetNulls,

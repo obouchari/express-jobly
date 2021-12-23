@@ -27,7 +27,7 @@ describe("create", () => {
   };
 
   test("works", async () => {
-    let job = await Job.create(newJob);
+    const job = await Job.create(newJob);
     expect(job).toEqual({
       id: expect.any(Number),
       ...newJob,
@@ -54,7 +54,7 @@ describe("create", () => {
 
 describe("findAll", () => {
   test("works: no filter", async () => {
-    let jobs = await Job.findAll();
+    const jobs = await Job.findAll();
     expect(jobs).toEqual([
       {
         id: expect.any(Number),
@@ -92,7 +92,7 @@ describe("findAll", () => {
 
 describe("findAll with filters", () => {
   test("works: with all filters", async () => {
-    let jobs = await Job.findAll({
+    const jobs = await Job.findAll({
       title: "ux",
       minSalary: 50000,
       hasEquity: true,
@@ -109,7 +109,7 @@ describe("findAll with filters", () => {
   });
 
   test("works: with title filter", async () => {
-    let jobs = await Job.findAll({
+    const jobs = await Job.findAll({
       title: "ux",
     });
     expect(jobs).toEqual([
@@ -124,7 +124,7 @@ describe("findAll with filters", () => {
   });
 
   test("works: with minSalary filter", async () => {
-    let jobs = await Job.findAll({
+    const jobs = await Job.findAll({
       minSalary: 110000,
     });
     expect(jobs).toEqual([
@@ -154,7 +154,7 @@ describe("findAll with filters", () => {
   });
 
   test("works: with hasEquity filter set to true", async () => {
-    let jobs = await Job.findAll({
+    const jobs = await Job.findAll({
       hasEquity: true,
     });
     expect(jobs).toEqual([
@@ -176,7 +176,7 @@ describe("findAll with filters", () => {
   });
 
   test("works: with hasEquity filter set to false", async () => {
-    let jobs = await Job.findAll({
+    const jobs = await Job.findAll({
       hasEquity: false,
     });
     expect(jobs).toEqual([
@@ -217,7 +217,7 @@ describe("findAll with filters", () => {
 describe("get", () => {
   test("works", async () => {
     const jobId = await getJobId();
-    let job = await Job.get(jobId);
+    const job = await Job.get(jobId);
     expect(job).toEqual({
       id: jobId,
       title: "UX Designer",
@@ -248,7 +248,7 @@ describe("update", () => {
 
   test("works", async () => {
     const jobId = await getJobId();
-    let job = await Job.update(jobId, updateData);
+    const job = await Job.update(jobId, updateData);
     expect(job).toEqual({
       id: jobId,
       ...updateData,
@@ -278,7 +278,7 @@ describe("update", () => {
       equity: null,
     };
 
-    let job = await Job.update(jobId, updateDataSetNulls);
+    const job = await Job.update(jobId, updateDataSetNulls);
     expect(job).toEqual({
       id: jobId,
       ...updateDataSetNulls,
