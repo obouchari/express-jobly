@@ -12,7 +12,7 @@ const Company = require("../models/company");
 const companyNewSchema = require("../schemas/companyNew.json");
 const companyUpdateSchema = require("../schemas/companyUpdate.json");
 
-const router = new express.Router();
+const router = express.Router();
 
 /** POST / { company } =>  { company }
  *

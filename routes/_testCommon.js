@@ -1,9 +1,10 @@
 "use strict";
 
-const db = require("../db.js");
+const db = require("../db");
 const User = require("../models/user");
 const Company = require("../models/company");
 const { createToken } = require("../helpers/tokens");
+const Job = require("../models/job");
 
 async function commonBeforeAll() {
   // noinspection SqlWithoutWhere
@@ -18,6 +19,7 @@ async function commonBeforeAll() {
     description: "Desc1",
     logoUrl: "http://c1.img",
   });
+
   await Company.create({
     handle: "c2",
     name: "C2",
@@ -25,6 +27,7 @@ async function commonBeforeAll() {
     description: "Desc2",
     logoUrl: "http://c2.img",
   });
+
   await Company.create({
     handle: "c3",
     name: "C3",
@@ -50,6 +53,7 @@ async function commonBeforeAll() {
     password: "password1",
     isAdmin: false,
   });
+
   await User.register({
     username: "u2",
     firstName: "U2F",
@@ -58,6 +62,7 @@ async function commonBeforeAll() {
     password: "password2",
     isAdmin: false,
   });
+
   await User.register({
     username: "u3",
     firstName: "U3F",
@@ -65,6 +70,34 @@ async function commonBeforeAll() {
     email: "user3@user.com",
     password: "password3",
     isAdmin: false,
+  });
+
+  await Job.create({
+    title: "UX Designer",
+    salary: 60000,
+    equity: 0.1,
+    companyHandle: "c1",
+  });
+
+  await Job.create({
+    title: "Front-End Developer",
+    salary: 110000,
+    equity: 0,
+    companyHandle: "c2",
+  });
+
+  await Job.create({
+    title: "Back-End Developer",
+    salary: 120000,
+    equity: 0.4,
+    companyHandle: "c1",
+  });
+
+  await Job.create({
+    title: "Project Manager",
+    salary: null,
+    equity: null,
+    companyHandle: "c2",
   });
 }
 
@@ -83,6 +116,12 @@ async function commonAfterAll() {
 const adminToken = createToken({ username: "admin", isAdmin: true });
 const u1Token = createToken({ username: "u1", isAdmin: false });
 
+const getJobId = async (title = "UX Designer") => {
+  const result = await db.query(`SELECT id FROM jobs WHERE title=$1`, [title]);
+  const job = result.rows[0];
+  return job.id;
+};
+
 module.exports = {
   commonBeforeAll,
   commonBeforeEach,
@@ -90,4 +129,5 @@ module.exports = {
   commonAfterAll,
   u1Token,
   adminToken,
+  getJobId,
 };

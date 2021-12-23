@@ -8,18 +8,18 @@ let db;
 
 types.setTypeParser(1700, (val) => parseFloat(val));
 
-if (process.env.NODE_ENV === "production") {
-  db = new Client({
-    connectionString: getDatabaseUri(),
-    ssl: {
-      rejectUnauthorized: false,
-    },
-  });
-} else {
-  db = new Client({
-    connectionString: getDatabaseUri(),
-  });
-}
+db = new Client(
+  process.env.NODE_ENV === "production"
+    ? {
+        connectionString: getDatabaseUri(),
+        ssl: {
+          rejectUnauthorized: false,
+        },
+      }
+    : {
+        connectionString: getDatabaseUri(),
+      }
+);
 
 db.connect();
 

@@ -197,13 +197,41 @@ describe("findAll", function () {
 
 describe("get", function () {
   test("works", async function () {
-    let company = await Company.get("c1");
+    let company = await Company.get("c2");
     expect(company).toEqual({
-      handle: "c1",
-      name: "C1",
-      description: "Desc1",
-      numEmployees: 1,
-      logoUrl: "http://c1.img",
+      handle: "c2",
+      name: "C2",
+      description: "Desc2",
+      numEmployees: 2,
+      logoUrl: "http://c2.img",
+      jobs: [
+        {
+          id: expect.any(Number),
+          companyHandle: "c2",
+          equity: 0,
+          salary: 110000,
+          title: "Front-End Developer",
+        },
+        {
+          id: expect.any(Number),
+          companyHandle: "c2",
+          equity: null,
+          salary: null,
+          title: "Project Manager",
+        },
+      ],
+    });
+  });
+
+  test("works with no jobs", async function () {
+    let company = await Company.get("c3");
+    expect(company).toEqual({
+      handle: "c3",
+      name: "C3",
+      description: "Desc3",
+      numEmployees: 3,
+      logoUrl: "http://c3.img",
+      jobs: [],
     });
   });
 

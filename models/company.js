@@ -124,20 +124,34 @@ class Company {
   /** Given a company handle, return data about company.
    *
    * Returns { handle, name, description, numEmployees, logoUrl, jobs }
-   *   where jobs is [{ id, title, salary, equity, companyHandle }, ...]
+   *   where jobs are [{ id, title, salary, equity, companyHandle }, ...]
    *
    * Throws NotFoundError if not found.
    **/
 
   static async get(handle) {
     const companyRes = await db.query(
-      `SELECT handle,
-                  name,
-                  description,
-                  num_employees AS "numEmployees",
-                  logo_url AS "logoUrl"
-           FROM companies
-           WHERE handle = $1`,
+      `SELECT c.handle,
+              c.name,
+              c.description,
+              c.num_employees AS "numEmployees",
+              c.logo_url AS "logoUrl",
+              CASE WHEN COUNT(j) = 0 THEN ARRAY[]::JSON[] ELSE ARRAY_AGG(j.job) END AS jobs
+         FROM companies c
+         LEFT OUTER JOIN 
+             (
+                 SELECT j1.company_handle, JSON_BUILD_OBJECT(
+                     'id', j1.id,
+                     'title', j1.title,
+                     'salary', j1.salary,
+                     'equity', j1.equity,
+                     'companyHandle', j1.company_handle
+                 ) AS job
+                 FROM jobs j1
+                 ORDER BY j1.title
+             ) j ON j.company_handle = c.handle
+         WHERE c.handle = $1
+         GROUP BY c.handle`,
       [handle]
     );
 

@@ -61,7 +61,7 @@ describe("findAll", function () {
         title: "Back-End Developer",
         salary: 120000,
         equity: 0.4,
-        companyHandle: "c3",
+        companyHandle: "c1",
       },
       {
         id: expect.any(Number),
@@ -133,7 +133,7 @@ describe("findAll with filters", function () {
         title: "Back-End Developer",
         salary: 120000,
         equity: 0.4,
-        companyHandle: "c3",
+        companyHandle: "c1",
       },
       {
         id: expect.any(Number),
@@ -163,7 +163,7 @@ describe("findAll with filters", function () {
         title: "Back-End Developer",
         salary: 120000,
         equity: 0.4,
-        companyHandle: "c3",
+        companyHandle: "c1",
       },
       {
         id: expect.any(Number),
@@ -185,7 +185,7 @@ describe("findAll with filters", function () {
         title: "Back-End Developer",
         salary: 120000,
         equity: 0.4,
-        companyHandle: "c3",
+        companyHandle: "c1",
       },
       {
         id: expect.any(Number),
