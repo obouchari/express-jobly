@@ -1,7 +1,7 @@
 const { sqlForPartialUpdate } = require("../helpers/sql");
 const { BadRequestError } = require("../expressError");
 
-describe("Object to SQL for partial updates ", function () {
+describe("Object to SQL for partial updates ", () => {
   test("return the correct format", () => {
     const data = { firstName: "Zahra", age: 5 };
     const results = {

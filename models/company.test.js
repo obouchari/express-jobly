@@ -17,7 +17,7 @@ afterAll(commonAfterAll);
 
 /************************************** create */
 
-describe("create", function () {
+describe("create", () => {
   const newCompany = {
     handle: "new",
     name: "New",
@@ -26,7 +26,7 @@ describe("create", function () {
     logoUrl: "http://new.img",
   };
 
-  test("works", async function () {
+  test("works", async () => {
     let company = await Company.create(newCompany);
     expect(company).toEqual(newCompany);
 
@@ -46,7 +46,7 @@ describe("create", function () {
     ]);
   });
 
-  test("bad request with dupe", async function () {
+  test("bad request with dupe", async () => {
     try {
       await Company.create(newCompany);
       await Company.create(newCompany);
@@ -59,8 +59,8 @@ describe("create", function () {
 
 /************************************** findAll */
 
-describe("findAll", function () {
-  test("works: no filter", async function () {
+describe("findAll", () => {
+  test("works: no filter", async () => {
     let companies = await Company.findAll();
     expect(companies).toEqual([
       {
@@ -90,8 +90,8 @@ describe("findAll", function () {
 
 /************************************** findAll with filter */
 
-describe("findAll", function () {
-  test("works: with all filters", async function () {
+describe("findAll", () => {
+  test("works: with all filters", async () => {
     let companies = await Company.findAll({
       name: "2",
       minEmployees: "1",
@@ -108,7 +108,7 @@ describe("findAll", function () {
     ]);
   });
 
-  test("works: with name filter", async function () {
+  test("works: with name filter", async () => {
     let companies = await Company.findAll({
       name: "2",
     });
@@ -123,7 +123,7 @@ describe("findAll", function () {
     ]);
   });
 
-  test("works: with minEmployees filter", async function () {
+  test("works: with minEmployees filter", async () => {
     let companies = await Company.findAll({
       minEmployees: "2",
     });
@@ -145,7 +145,7 @@ describe("findAll", function () {
     ]);
   });
 
-  test("works: with maxEmployees filter", async function () {
+  test("works: with maxEmployees filter", async () => {
     let companies = await Company.findAll({
       maxEmployees: "2",
     });
@@ -167,7 +167,7 @@ describe("findAll", function () {
     ]);
   });
 
-  test("throws: when minEmployees greater than maxEmployees", async function () {
+  test("throws: when minEmployees greater than maxEmployees", async () => {
     await expect(
       Company.findAll({
         minEmployees: "3",
@@ -176,7 +176,7 @@ describe("findAll", function () {
     ).rejects.toThrow();
   });
 
-  test("throws: when minEmployees is not a valid number", async function () {
+  test("throws: when minEmployees is not a valid number", async () => {
     await expect(
       Company.findAll({
         minEmployees: "abc",
@@ -184,7 +184,7 @@ describe("findAll", function () {
     ).rejects.toThrow();
   });
 
-  test("throws: when maxEmployees is not a valid number", async function () {
+  test("throws: when maxEmployees is not a valid number", async () => {
     await expect(
       Company.findAll({
         maxEmployees: "abc",
@@ -195,8 +195,8 @@ describe("findAll", function () {
 
 /************************************** get */
 
-describe("get", function () {
-  test("works", async function () {
+describe("get", () => {
+  test("works", async () => {
     let company = await Company.get("c2");
     expect(company).toEqual({
       handle: "c2",
@@ -223,7 +223,7 @@ describe("get", function () {
     });
   });
 
-  test("works with no jobs", async function () {
+  test("works with no jobs", async () => {
     let company = await Company.get("c3");
     expect(company).toEqual({
       handle: "c3",
@@ -235,7 +235,7 @@ describe("get", function () {
     });
   });
 
-  test("not found if no such company", async function () {
+  test("not found if no such company", async () => {
     try {
       await Company.get("nope");
       fail();
@@ -247,7 +247,7 @@ describe("get", function () {
 
 /************************************** update */
 
-describe("update", function () {
+describe("update", () => {
   const updateData = {
     name: "New",
     description: "New Description",
@@ -255,7 +255,7 @@ describe("update", function () {
     logoUrl: "http://new.img",
   };
 
-  test("works", async function () {
+  test("works", async () => {
     let company = await Company.update("c1", updateData);
     expect(company).toEqual({
       handle: "c1",
@@ -278,7 +278,7 @@ describe("update", function () {
     ]);
   });
 
-  test("works: null fields", async function () {
+  test("works: null fields", async () => {
     const updateDataSetNulls = {
       name: "New",
       description: "New Description",
@@ -308,7 +308,7 @@ describe("update", function () {
     ]);
   });
 
-  test("not found if no such company", async function () {
+  test("not found if no such company", async () => {
     try {
       await Company.update("nope", updateData);
       fail();
@@ -317,7 +317,7 @@ describe("update", function () {
     }
   });
 
-  test("bad request with no data", async function () {
+  test("bad request with no data", async () => {
     try {
       await Company.update("c1", {});
       fail();
@@ -329,8 +329,8 @@ describe("update", function () {
 
 /************************************** remove */
 
-describe("remove", function () {
-  test("works", async function () {
+describe("remove", () => {
+  test("works", async () => {
     await Company.remove("c1");
     const res = await db.query(
       "SELECT handle FROM companies WHERE handle='c1'"
@@ -338,7 +338,7 @@ describe("remove", function () {
     expect(res.rows.length).toEqual(0);
   });
 
-  test("not found if no such company", async function () {
+  test("not found if no such company", async () => {
     try {
       await Company.remove("nope");
       fail();

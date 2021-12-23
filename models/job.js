@@ -100,7 +100,7 @@ class Job {
       [id]
     );
 
-    const job = jobRes.rows[0];
+    const [job] = jobRes.rows;
     if (!job) throw new NotFoundError(`No job: ${id}`);
     return job;
   }
@@ -130,7 +130,7 @@ class Job {
                                 equity, 
                                 company_handle AS "companyHandle"`;
     const result = await db.query(querySql, [...values, id]);
-    const job = result.rows[0];
+    const [job] = result.rows;
     if (!job) throw new NotFoundError(`No job: ${id}`);
     return job;
   }
@@ -148,7 +148,7 @@ class Job {
            RETURNING id`,
       [id]
     );
-    const job = result.rows[0];
+    const [job] = result.rows;
     if (!job) throw new NotFoundError(`No job: ${id}`);
   }
 }

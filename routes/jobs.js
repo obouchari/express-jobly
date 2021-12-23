@@ -23,7 +23,7 @@ const router = express.Router();
  * Authorization required: login
  */
 
-router.post("/", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
+router.post("/", ensureLoggedIn, ensureAdmin, async (req, res, next) => {
   try {
     const validator = jsonschema.validate(req.body, jobNewSchema);
     if (!validator.valid) {
@@ -49,7 +49,7 @@ router.post("/", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
  * Authorization required: none
  */
 
-router.get("/", async function (req, res, next) {
+router.get("/", async (req, res, next) => {
   try {
     const acceptedReqQueries = ["title", "minSalary", "hasEquity"];
     // Array with invalid queries passed to this route
@@ -82,7 +82,7 @@ router.get("/", async function (req, res, next) {
  * Authorization required: none
  */
 
-router.get("/:id", async function (req, res, next) {
+router.get("/:id", async (req, res, next) => {
   try {
     const job = await Job.get(req.params.id);
     return res.json({ job });
@@ -102,45 +102,35 @@ router.get("/:id", async function (req, res, next) {
  * Authorization required: login
  */
 
-router.patch(
-  "/:id",
-  ensureLoggedIn,
-  ensureAdmin,
-  async function (req, res, next) {
-    try {
-      const validator = jsonschema.validate(req.body, jobUpdateSchema);
-      if (!validator.valid) {
-        const errs = validator.errors.map((e) => e.stack);
-        throw new BadRequestError(errs);
-      }
-
-      const job = await Job.update(req.params.id, req.body);
-      return res.json({ job });
-    } catch (err) {
-      return next(err);
+router.patch("/:id", ensureLoggedIn, ensureAdmin, async (req, res, next) => {
+  try {
+    const validator = jsonschema.validate(req.body, jobUpdateSchema);
+    if (!validator.valid) {
+      const errs = validator.errors.map((e) => e.stack);
+      throw new BadRequestError(errs);
     }
+
+    const job = await Job.update(req.params.id, req.body);
+    return res.json({ job });
+  } catch (err) {
+    return next(err);
   }
-);
+});
 
 /** DELETE /[id]  =>  { deleted: id }
  *
  * Authorization: login
  */
 
-router.delete(
-  "/:id",
-  ensureLoggedIn,
-  ensureAdmin,
-  async function (req, res, next) {
-    try {
-      const id = Number(req.params.id);
-      await Job.remove(id);
-      return res.json({ deleted: id });
-    } catch (err) {
-      console.log(err);
-      return next(err);
-    }
+router.delete("/:id", ensureLoggedIn, ensureAdmin, async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    await Job.remove(id);
+    return res.json({ deleted: id });
+  } catch (err) {
+    console.log(err);
+    return next(err);
   }
-);
+});
 
 module.exports = router;

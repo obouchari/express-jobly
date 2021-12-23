@@ -2,8 +2,8 @@ const jwt = require("jsonwebtoken");
 const { createToken } = require("./tokens");
 const { SECRET_KEY } = require("../config");
 
-describe("createToken", function () {
-  test("works: not admin", function () {
+describe("createToken", () => {
+  test("works: not admin", () => {
     const token = createToken({ username: "test", is_admin: false });
     const payload = jwt.verify(token, SECRET_KEY);
     expect(payload).toEqual({
@@ -13,7 +13,7 @@ describe("createToken", function () {
     });
   });
 
-  test("works: admin", function () {
+  test("works: admin", () => {
     const token = createToken({ username: "test", isAdmin: true });
     const payload = jwt.verify(token, SECRET_KEY);
     expect(payload).toEqual({
@@ -23,7 +23,7 @@ describe("createToken", function () {
     });
   });
 
-  test("works: default no admin", function () {
+  test("works: default no admin", () => {
     // given the security risk if this didn't work, checking this specifically
     const token = createToken({ username: "test" });
     const payload = jwt.verify(token, SECRET_KEY);

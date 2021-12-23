@@ -23,7 +23,7 @@ const router = express.Router();
  * Authorization required: login
  */
 
-router.post("/", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
+router.post("/", ensureLoggedIn, ensureAdmin, async (req, res, next) => {
   try {
     const validator = jsonschema.validate(req.body, companyNewSchema);
     if (!validator.valid) {
@@ -49,7 +49,7 @@ router.post("/", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
  * Authorization required: none
  */
 
-router.get("/", async function (req, res, next) {
+router.get("/", async (req, res, next) => {
   try {
     const acceptedReqQueries = ["name", "minEmployees", "maxEmployees"];
     // Array with invalid queries passed to this route
@@ -83,7 +83,7 @@ router.get("/", async function (req, res, next) {
  * Authorization required: none
  */
 
-router.get("/:handle", async function (req, res, next) {
+router.get("/:handle", async (req, res, next) => {
   try {
     const company = await Company.get(req.params.handle);
     return res.json({ company });
@@ -107,7 +107,7 @@ router.patch(
   "/:handle",
   ensureLoggedIn,
   ensureAdmin,
-  async function (req, res, next) {
+  async (req, res, next) => {
     try {
       const validator = jsonschema.validate(req.body, companyUpdateSchema);
       if (!validator.valid) {
@@ -132,7 +132,7 @@ router.delete(
   "/:handle",
   ensureLoggedIn,
   ensureAdmin,
-  async function (req, res, next) {
+  async (req, res, next) => {
     try {
       await Company.remove(req.params.handle);
       return res.json({ deleted: req.params.handle });

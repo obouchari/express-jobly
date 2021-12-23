@@ -21,7 +21,7 @@ afterAll(commonAfterAll);
 
 /************************************** POST /companies */
 
-describe("POST /companies", function () {
+describe("POST /companies", () => {
   const newCompany = {
     handle: "new",
     name: "New",
@@ -30,7 +30,7 @@ describe("POST /companies", function () {
     numEmployees: 10,
   };
 
-  test("ok for user with admin role", async function () {
+  test("ok for user with admin role", async () => {
     const resp = await request(app)
       .post("/companies")
       .send(newCompany)
@@ -41,7 +41,7 @@ describe("POST /companies", function () {
     });
   });
 
-  test("Unauthorized when user doesn't have admin role", async function () {
+  test("Unauthorized when user doesn't have admin role", async () => {
     const resp = await request(app)
       .post("/companies")
       .send(newCompany)
@@ -55,7 +55,7 @@ describe("POST /companies", function () {
     });
   });
 
-  test("bad request with missing data", async function () {
+  test("bad request with missing data", async () => {
     const resp = await request(app)
       .post("/companies")
       .send({
@@ -66,7 +66,7 @@ describe("POST /companies", function () {
     expect(resp.statusCode).toEqual(400);
   });
 
-  test("bad request with invalid data", async function () {
+  test("bad request with invalid data", async () => {
     const resp = await request(app)
       .post("/companies")
       .send({
@@ -80,8 +80,8 @@ describe("POST /companies", function () {
 
 /************************************** GET /companies */
 
-describe("GET /companies", function () {
-  test("ok when no filters are present", async function () {
+describe("GET /companies", () => {
+  test("ok when no filters are present", async () => {
     const resp = await request(app).get("/companies");
     expect(resp.body).toEqual({
       companies: [
@@ -110,7 +110,7 @@ describe("GET /companies", function () {
     });
   });
 
-  test("ok when all filters are present", async function () {
+  test("ok when all filters are present", async () => {
     const resp = await request(app).get(
       "/companies?name=c1&minEmployees=1&maxEmployees=1"
     );
@@ -127,7 +127,7 @@ describe("GET /companies", function () {
     });
   });
 
-  test("ok when some filters are present", async function () {
+  test("ok when some filters are present", async () => {
     const resp = await request(app).get("/companies?name=c1");
     expect(resp.body).toEqual({
       companies: [
@@ -142,7 +142,7 @@ describe("GET /companies", function () {
     });
   });
 
-  test("return 400 when passing invalid query params", async function () {
+  test("return 400 when passing invalid query params", async () => {
     const resp = await request(app).get("/companies?notSupported=abc");
     expect(resp.statusCode).toEqual(400);
     expect(resp.body).toEqual({
@@ -153,7 +153,7 @@ describe("GET /companies", function () {
     });
   });
 
-  test("return correct message format when passing multiple invalid query params", async function () {
+  test("return correct message format when passing multiple invalid query params", async () => {
     const resp = await request(app).get(
       "/companies?notSupported=abc&anotherUnsupported=xyz"
     );
@@ -166,7 +166,7 @@ describe("GET /companies", function () {
     });
   });
 
-  test("fails: test next() handler", async function () {
+  test("fails: test next() handler", async () => {
     // there's no normal failure event which will cause this route to fail ---
     // thus making it hard to test that the error-handler works with it. This
     // should cause an error, all right :)
@@ -180,8 +180,8 @@ describe("GET /companies", function () {
 
 /************************************** GET /companies/:handle */
 
-describe("GET /companies/:handle", function () {
-  test("works for anon", async function () {
+describe("GET /companies/:handle", () => {
+  test("works for anon", async () => {
     const resp = await request(app).get(`/companies/c2`);
     expect(resp.body).toEqual({
       company: {
@@ -210,7 +210,7 @@ describe("GET /companies/:handle", function () {
     });
   });
 
-  test("works for anon: company w/o jobs", async function () {
+  test("works for anon: company w/o jobs", async () => {
     const resp = await request(app).get(`/companies/c3`);
     expect(resp.body).toEqual({
       company: {
@@ -224,7 +224,7 @@ describe("GET /companies/:handle", function () {
     });
   });
 
-  test("not found for no such company", async function () {
+  test("not found for no such company", async () => {
     const resp = await request(app).get(`/companies/nope`);
     expect(resp.statusCode).toEqual(404);
   });
@@ -232,8 +232,8 @@ describe("GET /companies/:handle", function () {
 
 /************************************** PATCH /companies/:handle */
 
-describe("PATCH /companies/:handle", function () {
-  test("works for users", async function () {
+describe("PATCH /companies/:handle", () => {
+  test("works for users", async () => {
     const resp = await request(app)
       .patch(`/companies/c1`)
       .send({
@@ -251,7 +251,7 @@ describe("PATCH /companies/:handle", function () {
     });
   });
 
-  test("Unauthorized when user doesn't have admin role", async function () {
+  test("Unauthorized when user doesn't have admin role", async () => {
     const resp = await request(app)
       .patch("/companies/c1")
       .send({
@@ -267,14 +267,14 @@ describe("PATCH /companies/:handle", function () {
     });
   });
 
-  test("unauth for anon", async function () {
+  test("unauth for anon", async () => {
     const resp = await request(app).patch(`/companies/c1`).send({
       name: "C1-new",
     });
     expect(resp.statusCode).toEqual(401);
   });
 
-  test("not found on no such company", async function () {
+  test("not found on no such company", async () => {
     const resp = await request(app)
       .patch(`/companies/nope`)
       .send({
@@ -284,7 +284,7 @@ describe("PATCH /companies/:handle", function () {
     expect(resp.statusCode).toEqual(404);
   });
 
-  test("bad request on handle change attempt", async function () {
+  test("bad request on handle change attempt", async () => {
     const resp = await request(app)
       .patch(`/companies/c1`)
       .send({
@@ -294,7 +294,7 @@ describe("PATCH /companies/:handle", function () {
     expect(resp.statusCode).toEqual(400);
   });
 
-  test("bad request on invalid data", async function () {
+  test("bad request on invalid data", async () => {
     const resp = await request(app)
       .patch(`/companies/c1`)
       .send({
@@ -307,15 +307,15 @@ describe("PATCH /companies/:handle", function () {
 
 /************************************** DELETE /companies/:handle */
 
-describe("DELETE /companies/:handle", function () {
-  test("works for users", async function () {
+describe("DELETE /companies/:handle", () => {
+  test("works for users", async () => {
     const resp = await request(app)
       .delete(`/companies/c1`)
       .set("authorization", `Bearer ${adminToken}`);
     expect(resp.body).toEqual({ deleted: "c1" });
   });
 
-  test("Unauthorized when user doesn't have admin role", async function () {
+  test("Unauthorized when user doesn't have admin role", async () => {
     const resp = await request(app)
       .delete("/companies/c1")
       .set("authorization", `Bearer ${u1Token}`);
@@ -328,12 +328,12 @@ describe("DELETE /companies/:handle", function () {
     });
   });
 
-  test("unauth for anon", async function () {
+  test("unauth for anon", async () => {
     const resp = await request(app).delete(`/companies/c1`);
     expect(resp.statusCode).toEqual(401);
   });
 
-  test("not found for no such company", async function () {
+  test("not found for no such company", async () => {
     const resp = await request(app)
       .delete(`/companies/nope`)
       .set("authorization", `Bearer ${adminToken}`);

@@ -22,7 +22,7 @@ afterAll(commonAfterAll);
 
 /************************************** POST /jobs */
 
-describe("POST /jobs", function () {
+describe("POST /jobs", () => {
   const newJob = {
     title: "new title",
     salary: 100000,
@@ -30,7 +30,7 @@ describe("POST /jobs", function () {
     companyHandle: "c1",
   };
 
-  test("ok for user with admin role", async function () {
+  test("ok for user with admin role", async () => {
     const resp = await request(app)
       .post("/jobs")
       .send(newJob)
@@ -41,7 +41,7 @@ describe("POST /jobs", function () {
     });
   });
 
-  test("Unauthorized when user doesn't have admin role", async function () {
+  test("Unauthorized when user doesn't have admin role", async () => {
     const resp = await request(app)
       .post("/jobs")
       .send(newJob)
@@ -55,7 +55,7 @@ describe("POST /jobs", function () {
     });
   });
 
-  test("bad request with missing data", async function () {
+  test("bad request with missing data", async () => {
     const resp = await request(app)
       .post("/jobs")
       .send({
@@ -66,7 +66,7 @@ describe("POST /jobs", function () {
     expect(resp.statusCode).toEqual(400);
   });
 
-  test("bad request with invalid data", async function () {
+  test("bad request with invalid data", async () => {
     const resp = await request(app)
       .post("/jobs")
       .send({
@@ -80,8 +80,8 @@ describe("POST /jobs", function () {
 
 /************************************** GET /jobs */
 
-describe("GET /jobs", function () {
-  test("ok when no filters are present", async function () {
+describe("GET /jobs", () => {
+  test("ok when no filters are present", async () => {
     const resp = await request(app).get("/jobs");
     expect(resp.body).toEqual({
       jobs: [
@@ -117,7 +117,7 @@ describe("GET /jobs", function () {
     });
   });
 
-  test("ok when all filters are present", async function () {
+  test("ok when all filters are present", async () => {
     const resp = await request(app).get(
       "/jobs?title=dev&minSalary=115000&hasEquity=true"
     );
@@ -134,7 +134,7 @@ describe("GET /jobs", function () {
     });
   });
 
-  test("ok when some filters are present", async function () {
+  test("ok when some filters are present", async () => {
     const resp = await request(app).get("/jobs?title=dev");
     expect(resp.body).toEqual({
       jobs: [
@@ -156,7 +156,7 @@ describe("GET /jobs", function () {
     });
   });
 
-  test("return 400 when passing invalid query params", async function () {
+  test("return 400 when passing invalid query params", async () => {
     const resp = await request(app).get("/jobs?notSupported=abc");
     expect(resp.statusCode).toEqual(400);
     expect(resp.body).toEqual({
@@ -167,7 +167,7 @@ describe("GET /jobs", function () {
     });
   });
 
-  test("return correct message format when passing multiple invalid query params", async function () {
+  test("return correct message format when passing multiple invalid query params", async () => {
     const resp = await request(app).get(
       "/jobs?notSupported=abc&anotherUnsupported=xyz"
     );
@@ -180,7 +180,7 @@ describe("GET /jobs", function () {
     });
   });
 
-  test("fails: test next() handler", async function () {
+  test("fails: test next() handler", async () => {
     // there's no normal failure event which will cause this route to fail ---
     // thus making it hard to test that the error-handler works with it. This
     // should cause an error, all right :)
@@ -194,8 +194,8 @@ describe("GET /jobs", function () {
 
 /************************************** GET /jobs/:id */
 
-describe("GET /jobs/:id", function () {
-  test("works for anon", async function () {
+describe("GET /jobs/:id", () => {
+  test("works for anon", async () => {
     const jobId = await getJobId();
     const resp = await request(app).get(`/jobs/${jobId}`);
     expect(resp.body).toEqual({
@@ -209,7 +209,7 @@ describe("GET /jobs/:id", function () {
     });
   });
 
-  test("not found for no such job", async function () {
+  test("not found for no such job", async () => {
     const resp = await request(app).get(`/jobs/0`);
     expect(resp.statusCode).toEqual(404);
   });
@@ -217,8 +217,8 @@ describe("GET /jobs/:id", function () {
 
 /************************************** PATCH /jobs/:id */
 
-describe("PATCH /jobs/:id", function () {
-  test("works for users", async function () {
+describe("PATCH /jobs/:id", () => {
+  test("works for users", async () => {
     const jobId = await getJobId();
     const resp = await request(app)
       .patch(`/jobs/${jobId}`)
@@ -237,7 +237,7 @@ describe("PATCH /jobs/:id", function () {
     });
   });
 
-  test("Unauthorized when user doesn't have admin role", async function () {
+  test("Unauthorized when user doesn't have admin role", async () => {
     const jobId = await getJobId();
     const resp = await request(app)
       .patch(`/jobs/${jobId}`)
@@ -254,7 +254,7 @@ describe("PATCH /jobs/:id", function () {
     });
   });
 
-  test("unauth for anon", async function () {
+  test("unauth for anon", async () => {
     const jobId = await getJobId();
     const resp = await request(app).patch(`/jobs/${jobId}`).send({
       title: "UI/UX Designer",
@@ -262,7 +262,7 @@ describe("PATCH /jobs/:id", function () {
     expect(resp.statusCode).toEqual(401);
   });
 
-  test("not found on no such job", async function () {
+  test("not found on no such job", async () => {
     const resp = await request(app)
       .patch(`/jobs/0`)
       .send({
@@ -272,7 +272,7 @@ describe("PATCH /jobs/:id", function () {
     expect(resp.statusCode).toEqual(404);
   });
 
-  test("bad request on company handle change attempt", async function () {
+  test("bad request on company handle change attempt", async () => {
     const jobId = await getJobId();
     const resp = await request(app)
       .patch(`/jobs/${jobId}`)
@@ -283,7 +283,7 @@ describe("PATCH /jobs/:id", function () {
     expect(resp.statusCode).toEqual(400);
   });
 
-  test("bad request on invalid data", async function () {
+  test("bad request on invalid data", async () => {
     const jobId = await getJobId();
     const resp = await request(app)
       .patch(`/jobs/${jobId}`)
@@ -297,8 +297,8 @@ describe("PATCH /jobs/:id", function () {
 
 /************************************** DELETE /jobs/:id */
 
-describe("DELETE /jobs/:id", function () {
-  test("works for users", async function () {
+describe("DELETE /jobs/:id", () => {
+  test("works for users", async () => {
     const jobId = await getJobId();
     const resp = await request(app)
       .delete(`/jobs/${jobId}`)
@@ -306,7 +306,7 @@ describe("DELETE /jobs/:id", function () {
     expect(resp.body).toEqual({ deleted: jobId });
   });
 
-  test("Unauthorized when user doesn't have admin role", async function () {
+  test("Unauthorized when user doesn't have admin role", async () => {
     const jobId = await getJobId();
     const resp = await request(app)
       .delete(`/jobs/${jobId}`)
@@ -320,13 +320,13 @@ describe("DELETE /jobs/:id", function () {
     });
   });
 
-  test("unauth for anon", async function () {
+  test("unauth for anon", async () => {
     const jobId = await getJobId();
     const resp = await request(app).delete(`/jobs/${jobId}`);
     expect(resp.statusCode).toEqual(401);
   });
 
-  test("not found for no such job", async function () {
+  test("not found for no such job", async () => {
     const resp = await request(app)
       .delete(`/jobs/0`)
       .set("authorization", `Bearer ${adminToken}`);

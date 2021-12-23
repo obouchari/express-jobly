@@ -18,7 +18,7 @@ afterAll(commonAfterAll);
 
 /************************************** create */
 
-describe("create", function () {
+describe("create", () => {
   const newJob = {
     title: "new",
     salary: 4000,
@@ -26,7 +26,7 @@ describe("create", function () {
     companyHandle: "c1",
   };
 
-  test("works", async function () {
+  test("works", async () => {
     let job = await Job.create(newJob);
     expect(job).toEqual({
       id: expect.any(Number),
@@ -52,8 +52,8 @@ describe("create", function () {
 
 /************************************** findAll */
 
-describe("findAll", function () {
-  test("works: no filter", async function () {
+describe("findAll", () => {
+  test("works: no filter", async () => {
     let jobs = await Job.findAll();
     expect(jobs).toEqual([
       {
@@ -90,8 +90,8 @@ describe("findAll", function () {
 
 /************************************** findAll with filter */
 
-describe("findAll with filters", function () {
-  test("works: with all filters", async function () {
+describe("findAll with filters", () => {
+  test("works: with all filters", async () => {
     let jobs = await Job.findAll({
       title: "ux",
       minSalary: 50000,
@@ -108,7 +108,7 @@ describe("findAll with filters", function () {
     ]);
   });
 
-  test("works: with title filter", async function () {
+  test("works: with title filter", async () => {
     let jobs = await Job.findAll({
       title: "ux",
     });
@@ -123,7 +123,7 @@ describe("findAll with filters", function () {
     ]);
   });
 
-  test("works: with minSalary filter", async function () {
+  test("works: with minSalary filter", async () => {
     let jobs = await Job.findAll({
       minSalary: 110000,
     });
@@ -145,7 +145,7 @@ describe("findAll with filters", function () {
     ]);
   });
 
-  test("throws: when minSalary is not a valid number", async function () {
+  test("throws: when minSalary is not a valid number", async () => {
     await expect(
       Job.findAll({
         minSalary: "abc",
@@ -153,7 +153,7 @@ describe("findAll with filters", function () {
     ).rejects.toThrow();
   });
 
-  test("works: with hasEquity filter set to true", async function () {
+  test("works: with hasEquity filter set to true", async () => {
     let jobs = await Job.findAll({
       hasEquity: true,
     });
@@ -175,7 +175,7 @@ describe("findAll with filters", function () {
     ]);
   });
 
-  test("works: with hasEquity filter set to false", async function () {
+  test("works: with hasEquity filter set to false", async () => {
     let jobs = await Job.findAll({
       hasEquity: false,
     });
@@ -214,8 +214,8 @@ describe("findAll with filters", function () {
 
 /************************************** get */
 
-describe("get", function () {
-  test("works", async function () {
+describe("get", () => {
+  test("works", async () => {
     const jobId = await getJobId();
     let job = await Job.get(jobId);
     expect(job).toEqual({
@@ -227,7 +227,7 @@ describe("get", function () {
     });
   });
 
-  test("not found if no such job", async function () {
+  test("not found if no such job", async () => {
     try {
       await Job.get(0);
       fail();
@@ -239,14 +239,14 @@ describe("get", function () {
 
 /************************************** update */
 
-describe("update", function () {
+describe("update", () => {
   const updateData = {
     title: "UI/UX Designer",
     salary: 70000,
     equity: 0.2,
   };
 
-  test("works", async function () {
+  test("works", async () => {
     const jobId = await getJobId();
     let job = await Job.update(jobId, updateData);
     expect(job).toEqual({
@@ -270,7 +270,7 @@ describe("update", function () {
     ]);
   });
 
-  test("works: null fields", async function () {
+  test("works: null fields", async () => {
     const jobId = await getJobId();
     const updateDataSetNulls = {
       title: "New",
@@ -302,7 +302,7 @@ describe("update", function () {
     ]);
   });
 
-  test("not found if no such job", async function () {
+  test("not found if no such job", async () => {
     try {
       await Job.update(0, updateData);
       fail();
@@ -311,7 +311,7 @@ describe("update", function () {
     }
   });
 
-  test("bad request with no data", async function () {
+  test("bad request with no data", async () => {
     try {
       const jobId = await getJobId();
       await Job.update(jobId, {});
@@ -324,15 +324,15 @@ describe("update", function () {
 
 /************************************** remove */
 
-describe("remove", function () {
-  test("works", async function () {
+describe("remove", () => {
+  test("works", async () => {
     const jobId = await getJobId();
     await Job.remove(jobId);
     const res = await db.query("SELECT id FROM jobs WHERE id=$1", [jobId]);
     expect(res.rows.length).toEqual(0);
   });
 
-  test("not found if no such job", async function () {
+  test("not found if no such job", async () => {
     try {
       await Job.remove(0);
       fail();
