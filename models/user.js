@@ -156,11 +156,9 @@ class User {
    */
 
   static async update(username, data) {
-    if (data.password) {
-      const hashedPassword = await bcrypt.hash(
-        data.password,
-        BCRYPT_WORK_FACTOR
-      );
+    const { password } = data;
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
       data.password = hashedPassword;
     }
 
