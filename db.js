@@ -4,11 +4,9 @@ const { Client } = require("pg");
 const types = require("pg").types;
 const { getDatabaseUri } = require("./config");
 
-let db;
-
 types.setTypeParser(1700, (val) => parseFloat(val));
 
-db = new Client(
+const db = new Client(
   process.env.NODE_ENV === "production"
     ? {
         connectionString: getDatabaseUri(),

@@ -110,13 +110,15 @@ class Company {
            }
             ORDER BY name`;
 
-    let companiesRes;
-    if (isEmpty(params)) {
-      companiesRes = await db.query(sqlQuery);
-      return companiesRes.rows;
+    let query = {
+      text: sqlQuery,
+    };
+
+    if (!isEmpty(params)) {
+      query = { ...query, values: params };
     }
 
-    companiesRes = await db.query(sqlQuery, params);
+    const companiesRes = await db.query(query);
     return companiesRes.rows;
   }
 

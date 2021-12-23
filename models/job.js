@@ -71,13 +71,15 @@ class Job {
            }
             ORDER BY title`;
 
-    let jobsRes;
-    if (isEmpty(params)) {
-      jobsRes = await db.query(sqlQuery);
-      return jobsRes.rows;
+    let query = {
+      text: sqlQuery,
+    };
+
+    if (!isEmpty(params)) {
+      query = { ...query, values: params };
     }
 
-    jobsRes = await db.query(sqlQuery, params);
+    const jobsRes = await db.query(query);
     return jobsRes.rows;
   }
 
