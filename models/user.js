@@ -159,7 +159,7 @@ class User {
     const { password } = data;
     if (password) {
       const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
-      data.password = hashedPassword;
+      data = { ...data, password: hashedPassword };
     }
 
     const { setCols, values } = sqlForPartialUpdate(data, {

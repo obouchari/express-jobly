@@ -118,7 +118,7 @@ const u1Token = createToken({ username: "u1", isAdmin: false });
 
 const getJobId = async (title = "UX Designer") => {
   const result = await db.query(`SELECT id FROM jobs WHERE title=$1`, [title]);
-  const job = result.rows[0];
+  const [job] = result.rows;
   return job.id;
 };
 
