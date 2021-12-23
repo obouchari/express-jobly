@@ -1,7 +1,6 @@
 "use strict";
 /** Database setup for jobly. */
-const { Client } = require("pg");
-const types = require("pg").types;
+const { Client, types } = require("pg");
 const { getDatabaseUri } = require("./config");
 
 types.setTypeParser(1700, (val) => parseFloat(val));

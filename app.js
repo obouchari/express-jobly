@@ -33,10 +33,9 @@ app.use((req, res, next) => next(new NotFoundError()));
 /** Generic error handler; anything unhandled goes here. */
 app.use((err, req, res, next) => {
   if (process.env.NODE_ENV !== "test") console.error(err.stack);
-  const status = err.status || 500;
-  const message = err.message;
+  const { status, message } = err;
 
-  return res.status(status).json({
+  return res.status(status || 500).json({
     error: { message, status },
   });
 });
