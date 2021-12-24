@@ -15,6 +15,7 @@ const User = require("../models/user");
 const { createToken } = require("../helpers/tokens");
 const userNewSchema = require("../schemas/userNew.json");
 const userUpdateSchema = require("../schemas/userUpdate.json");
+const { next } = require("lodash/seq");
 
 const router = express.Router();
 
@@ -126,6 +127,21 @@ router.delete(
     try {
       await User.remove(req.params.username);
       return res.json({ deleted: req.params.username });
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
+router.post(
+  "/:username/jobs/:id",
+  ensureLoggedIn,
+  ensureAdminOrSelf,
+  async (req, res, next) => {
+    try {
+      const { username, id } = req.params;
+      await User.createJobApplication(username, id);
+      return res.status(201).json({ applied: id });
     } catch (err) {
       return next(err);
     }

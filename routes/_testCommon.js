@@ -99,6 +99,12 @@ async function commonBeforeAll() {
     equity: null,
     companyHandle: "c2",
   });
+
+  await db.query(`
+    INSERT INTO applications(username, job_id)
+    VALUES ('u1', (SELECT id FROM jobs WHERE title iLIKE '%ux%')),
+           ('u1', (SELECT id FROM jobs WHERE title iLIKE '%front%'))
+  `);
 }
 
 async function commonBeforeEach() {

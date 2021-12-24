@@ -39,6 +39,12 @@ async function commonBeforeAll() {
            ('Back-End Developer', 120000, 0.4, 'c1'),
            ('Project Manager', null, null, 'c2')
   `);
+
+  await db.query(`
+    INSERT INTO applications(username, job_id)
+    VALUES ('u1', (SELECT id FROM jobs WHERE title iLIKE '%ux%')),
+           ('u1', (SELECT id FROM jobs WHERE title iLIKE '%front%'))
+  `);
 }
 
 async function commonBeforeEach() {

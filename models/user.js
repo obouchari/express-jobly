@@ -101,13 +101,21 @@ class User {
 
   static async findAll() {
     const result = await db.query(
-      `SELECT username,
-                  first_name AS "firstName",
-                  last_name AS "lastName",
-                  email,
-                  is_admin AS "isAdmin"
-           FROM users
-           ORDER BY username`
+      `SELECT u.username,
+            u.first_name AS "firstName",
+            u.last_name AS "lastName",
+            u.email,
+            u.is_admin AS "isAdmin",
+            CASE WHEN COUNT(x) = 0 THEN ARRAY[]::INTEGER[] ELSE ARRAY_AGG(x.id) END AS jobs
+       FROM users u
+       LEFT JOIN
+            (
+                SELECT username, id
+                FROM applications a
+                LEFT JOIN jobs j on j.id = a.job_id
+            ) x USING (username)
+        GROUP BY u.username
+        ORDER BY u.username`
     );
 
     return result.rows;
@@ -199,6 +207,27 @@ class User {
     const [user] = result.rows;
 
     if (!user) throw new NotFoundError(`No user: ${username}`);
+  }
+
+  /**
+   * Create job application for a user
+   * @param username
+   * @param jobId
+   * @returns {Promise<void>}
+   */
+  static async createJobApplication(username, jobId) {
+    try {
+      await db.query(
+        `
+        INSERT INTO applications (username, job_id) VALUES ($1, $2) RETURNING username
+    `,
+        [username, jobId]
+      );
+    } catch (err) {
+      throw new BadRequestError(
+        `Username ${username} and/or job id ${jobId} are invalid.`
+      );
+    }
   }
 }
 
