@@ -165,12 +165,11 @@ class User {
 
   static async update(username, data) {
     const { password } = data;
-    if (password) {
-      const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
-      data = { ...data, password: hashedPassword };
-    }
+    const updatePayload = password
+      ? { ...data, password: await bcrypt.hash(password, BCRYPT_WORK_FACTOR) }
+      : { ...data };
 
-    const { setCols, values } = sqlForPartialUpdate(data, {
+    const { setCols, values } = sqlForPartialUpdate(updatePayload, {
       firstName: "first_name",
       lastName: "last_name",
       isAdmin: "is_admin",
@@ -216,6 +215,19 @@ class User {
    * @returns {Promise<void>}
    */
   static async createJobApplication(username, jobId) {
+    const duplicateCheck = await db.query(
+      `
+        SELECT * FROM applications WHERE username=$1 AND job_id=$2
+      `,
+      [username, jobId]
+    );
+
+    if (duplicateCheck.rows[0]) {
+      throw new BadRequestError(
+        `User ${username} already applied for job with id: ${jobId}`
+      );
+    }
+
     try {
       await db.query(
         `

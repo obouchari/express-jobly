@@ -11,6 +11,10 @@ async function commonBeforeAll() {
   await db.query("DELETE FROM users");
   // noinspection SqlWithoutWhere
   await db.query("DELETE FROM companies");
+  // noinspection SqlWithoutWhere
+  await db.query("DELETE FROM jobs");
+  // noinspection SqlWithoutWhere
+  await db.query("DELETE FROM applications");
 
   await Company.create({
     handle: "c1",
@@ -102,7 +106,7 @@ async function commonBeforeAll() {
 
   await db.query(`
     INSERT INTO applications(username, job_id)
-    VALUES ('u1', (SELECT id FROM jobs WHERE title iLIKE '%ux%')),
+    VALUES ('u1', (SELECT id FROM jobs WHERE title iLIKE '%back%')),
            ('u1', (SELECT id FROM jobs WHERE title iLIKE '%front%'))
   `);
 }
